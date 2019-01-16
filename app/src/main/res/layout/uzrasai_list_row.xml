@@ -33,16 +33,24 @@
             android:layout_width="20px"
             android:layout_height="20px" />
 
-        <Button
-            android:id="@+id/deleteMelody"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:onClick="deleteMelody"/>
-        <Button
-            android:id="@id/playMelody"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:src="@mipmap/play"
+            android:scaleType="center"
+            android:background="@null"
             android:onClick="playMelody"/>
+        <Space
+            android:layout_width="40px"
+            android:layout_height="40px" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:src="@mipmap/delete"
+            android:scaleType="center"
+            android:background="@null"
+            android:onClick="deleteMelody"/>
 
 
 

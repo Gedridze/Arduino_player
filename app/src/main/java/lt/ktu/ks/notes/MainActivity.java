@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,28 +32,58 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Formatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends Activity /*implements AdapterView.OnItemClickListener*/
 {
     private static  final  String TAG = "MainActivity";
+    private String ip = "";
     ArrayList<HashMap<String, String>> UzrasaiDataList;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String filename = "config";
+        if(ip.equals("")) {
+            Context ctx = getApplication();
+            try {
+                FileInputStream fileInputStream = ctx.openFileInput(filename);
+                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                ip = bufferedReader.readLine();
+                Tools.RestURL = String.format("http://%s:3100", ip);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         gautiMelodijas();
+
+
     }
 
     private void gautiMelodijas()
     {
         new gautiMelodijasTask().execute(Tools.RestURL, null, null);
     }
+
 
     private void rodytiMelodijas(List<Melodija> uzrasai)
     {
@@ -73,8 +105,8 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
         ListView mlv = (ListView)findViewById(R.id.uzrasaiListView);
 
         SimpleAdapter SimpleMiestaiAdapter = new SimpleAdapter(this, UzrasaiDataList, R.layout.uzrasai_list_row,
-                new String[] {"id", "pavadinimas", "trukme", "trinti", "groti"},
-                new int[] {R.id.idPlaceholder, R.id.pavadinimasTextView, R.id.trukmeTextView, R.id.deleteMelody, R.id.playMelody});
+                new String[] {"id", "pavadinimas", "trukme"},
+                new int[] {R.id.idPlaceholder, R.id.pavadinimasTextView, R.id.trukmeTextView});
 
         mlv.setAdapter(SimpleMiestaiAdapter);
        // mlv.setOnItemClickListener(this);
@@ -121,12 +153,25 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("IP adresas");
         final EditText input = new EditText(this);
-        input.setText(Tools.RestURL);
+        input.setText(ip);
         builder.setView(input);
         builder.setPositiveButton("Patvirtinti", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Tools.RestURL = input.getText().toString();
+                Context ctx = getApplicationContext();
+                FileOutputStream fileOutputStream = null;
+                try {
+                    fileOutputStream = ctx.openFileOutput("config", Context.MODE_PRIVATE);
+                    fileOutputStream.write(input.getText().toString().getBytes());
+                    fileOutputStream.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ip = input.getText().toString();
+                Tools.RestURL = String.format("http://%s:3100", ip);
                 Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(myIntent);
             }
@@ -297,4 +342,5 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
             startActivity(myIntent);
         }
     }
+
 }
