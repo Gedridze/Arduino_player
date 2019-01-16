@@ -28,7 +28,7 @@
             android:layout_height="20px" />
 
         <TextView
-            android:layout_width="125dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Trukmė"
@@ -38,10 +38,23 @@
         <Space
             android:layout_width="20px"
             android:layout_height="20px" />
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="30dp"
+            android:src="@mipmap/settings"
+            android:scaleType="center"
+            android:background="@null"
+            android:onClick="changeIP"/>
+        <Space
+            android:layout_width="20px"
+            android:layout_height="20px" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:src="@mipmap/reload"
+            android:scaleType="center"
+            android:background="@null"
+            android:onClick="reload"/>
 
 
 

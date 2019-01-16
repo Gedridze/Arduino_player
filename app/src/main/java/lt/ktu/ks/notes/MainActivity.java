@@ -1,16 +1,21 @@
 package lt.ktu.ks.notes;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -18,7 +23,13 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +39,7 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
     private static  final  String TAG = "MainActivity";
     ArrayList<HashMap<String, String>> UzrasaiDataList;
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +112,35 @@ public class MainActivity extends Activity /*implements AdapterView.OnItemClickL
         startActivity(myIntent);
     }
 
+    public void reload(View view) {
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(myIntent);
+    }
 
+    public void changeIP(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("IP adresas");
+        final EditText input = new EditText(this);
+        input.setText(Tools.RestURL);
+        builder.setView(input);
+        builder.setPositiveButton("Patvirtinti", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Tools.RestURL = input.getText().toString();
+                Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
+        builder.setNegativeButton("Atšaukti", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.show();
+
+    }
 
 
     private class grotiMelodija extends AsyncTask<Integer, Void, Integer> {
