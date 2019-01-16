@@ -16,12 +16,14 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener
+public class MainActivity extends Activity /*implements AdapterView.OnItemClickListener*/
 {
     private static  final  String TAG = "MainActivity";
     ArrayList<HashMap<String, String>> UzrasaiDataList;
@@ -59,20 +61,36 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         ListView mlv = (ListView)findViewById(R.id.uzrasaiListView);
 
         SimpleAdapter SimpleMiestaiAdapter = new SimpleAdapter(this, UzrasaiDataList, R.layout.uzrasai_list_row,
-                new String[] {"id", "pavadinimas", "trukme"},
-                new int[] {R.id.idPlaceholder, R.id.pavadinimasTextView, R.id.trukmeTextView});
+                new String[] {"id", "pavadinimas", "trukme", "trinti", "groti"},
+                new int[] {R.id.idPlaceholder, R.id.pavadinimasTextView, R.id.trukmeTextView, R.id.deleteMelody, R.id.playMelody});
 
         mlv.setAdapter(SimpleMiestaiAdapter);
-        mlv.setOnItemClickListener(this);
+       // mlv.setOnItemClickListener(this);
     }
 
-    @Override
+    /*@Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id)
     {
         String UzrasoID = UzrasaiDataList.get(pos).get("id");
         Float trukme = Float.parseFloat(UzrasaiDataList.get(pos).get("trukme"));
         new grotiMelodija().execute(Integer.parseInt(UzrasoID), Math.round(trukme*1000));
 
+    }*/
+
+    public void playMelody(View v){
+        LinearLayout parent = (LinearLayout)v.getParent();
+        TextView id = (TextView)parent.getChildAt(0);
+        TextView time = (TextView)parent.getChildAt(3);
+        String UzrasoID = id.getText().toString();
+        Float trukme = Float.parseFloat(time.getText().toString());
+        new grotiMelodija().execute(Integer.parseInt(UzrasoID), Math.round(trukme*1000));
+    }
+
+    public void deleteMelody(View v){
+        LinearLayout parent = (LinearLayout)v.getParent();
+        TextView ID = (TextView)parent.getChildAt(0);
+        int id = Integer.parseInt(ID.getText().toString());
+        new trintiMelodija().execute(id);
     }
 
 
@@ -206,6 +224,37 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             actionProgressDialog.cancel();
 
             rodytiMelodijas(result);
+        }
+    }
+
+    private class trintiMelodija extends AsyncTask<Integer, Void, Void>{
+
+        ProgressDialog actionProgressDialog = new ProgressDialog(MainActivity.this);
+
+        @Override
+        protected void onPreExecute()
+        {
+            actionProgressDialog.setMessage("Trinama...");
+            actionProgressDialog.show();
+            actionProgressDialog.setCancelable(false);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            try {
+                DataAPI.trintiMelodija(integers[0].toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v){
+            actionProgressDialog.cancel();
+            Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(myIntent);
         }
     }
 }
