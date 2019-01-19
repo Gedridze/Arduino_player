@@ -1,0 +1,39 @@
+extends layout
+
+block content
+    div(class="container")
+        div(class="row")
+            div(class="col-md-8")
+                if data
+                    h1 Užrašo "#{data.pavadinimas}" trynimas
+                else
+                    h1 Užrašo trynimas
+        div(class="row move-down")
+            div(class="col-md-8")
+                a(href="/", class="btn btn-primary", role="button")
+                    span(class="glyphicon glyphicon-home")
+                a(href="/melody/new", class="btn btn-primary", role="button")
+                    span(class="glyphicon glyphicon-plus")
+                    |  Nauja melodija
+        div(class="row move-down")
+            div(class="col-md-8")
+                if data
+                    form(class="form-horizontal", method="post", action="/melody/delete/#{melode_id}")
+                        div(class="form-group")
+                            div(class="col-sm-8")
+                                label(class="control-label text-danger") Ar tikrai nori ištrinti šią melodiją?
+                        div(class="form-group")
+                            div(class="col-sm-8")
+                                div(class="panel panel-default")
+                                    div(class="panel-heading")
+                                        h3(class="panel-title")
+                                            b #{data.pavadinimas}
+                                    div(class="panel-body") #{data.natos}
+                        div(class="form-group")
+                            div(class="col-sm-8")
+                                button(type="submit" class="btn btn-danger") Taip
+                                a(href="/", class="btn btn-success", role="button") Ne
+        div(class="row move-down")
+            div(class="col-md-8")
+                if info
+                    b #{info}

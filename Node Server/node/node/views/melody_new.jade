@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    div(class="container")
+        div(class="row")
+            div(class="col-md-8")
+                h1 Nauja Melodija
+        div(class="row move-down")
+            div(class="col-md-8")
+                a(href="/", class="btn btn-primary", role="button")
+                    span(class="glyphicon glyphicon-home")
+        div(class="row move-down")
+            div(class="col-md-8")
+                form(class="form-horizontal", method="post", action="/melody/new")
+                    div(class="form-group")
+                        label(for="title", class="col-sm-2 control-label") Pavadinimas*
+                        div(class="col-sm-6")
+                            input(type="text" class="form-control", id="title", name="title", required=true)
+                    div(class="form-group")
+                        label(for="text") Melodijos pavyzdinė eilutė: 3 E3 E3 E3 4 4 4,
+                        label(for="text") Pirmas skaičius: natų kiekis 1-50 "3", poto seka norimos natos A-G ir 2-6 "E3 E3 E3", tada kiekvienos natos ilgis 1-9 "4 4 4" ir kablelis "," gale eilutės
+                    div(class="form-group")
+                        label(for="text", class="col-sm-2 control-label") Melodija*
+                        div(class="col-sm-6")
+                            textarea(class="form-control", id="text", name="text", required=true)
+                    div(class="form-group")
+                        div(class="col-sm-offset-2 col-sm-10")
+                            button(type="submit" class="btn btn-success" onclick='return CheckData();') Išsaugoti
+        div(class="row move-down")
+            div(class="col-md-8")
+                if info
+                    b #{info}

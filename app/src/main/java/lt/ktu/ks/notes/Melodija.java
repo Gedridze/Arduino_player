@@ -8,7 +8,6 @@ public class Melodija {
     public int ID;
     public String Pavadinimas;
     public float Trukme;
-    public int a;
 
     public Melodija() {
     }

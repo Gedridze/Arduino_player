@@ -19,7 +19,7 @@
         android:layout_height="20px" />
 
     <TextView
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"

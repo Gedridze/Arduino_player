@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  div(class="container")
+    div(class="row")
+      div(class="col-md-8")
+        h1= title
+    div(class="row move-down")
+      div(class="col-md-8")
+        a(href="/melody/new", class="btn btn-primary", role="button")
+          span(class="glyphicon glyphicon-plus")
+          |  Nauja melodija
+    div(class="row move-down")
+      div(class="col-md-8")
+        table(class="table table-striped table-hover")
+          thead
+            tr
+              th Pavadinimas
+              th Natos
+              th(class="text-right") Veiksmai
+          tbody
+            -each melode in data
+              include melody_row
