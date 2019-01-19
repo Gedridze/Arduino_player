@@ -1,0 +1,14 @@
+block content
+tr
+    td= melode.pavadinimas
+    td= melode.natos
+    td(class="text-right")
+        a(href="/play/#{melode.id}", class="btn btn-success", role="button")
+            span(class="glyphicon glyphicon-play")
+            |  Groti
+        a(href="/melody/edit/#{melode.id}", class="btn btn-warning", role="button")
+            span(class="glyphicon glyphicon-search")
+            |  Redaguoti
+        a(href="/melody/delete/#{melode.id}", class="btn btn-danger", role="button")
+            span(class="glyphicon glyphicon-remove")
+            |  Trinti
